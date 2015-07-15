@@ -37,16 +37,12 @@ int lmax, gridlevel, nvertx, nfacex;
 float *vlat, *vlong ;
 float **xv, **yv, **zv,**zzv, **cocx, **cocy, **cocz, **v0, **s[7],**sb ,****t[7],****tb  ;
 int **vofv, **voff, **fnxtf , **vofv_new,**voff_new,**voff_new2,*order , *ans , **fofv , **fnxte,**fnxtf_new, **vofe,**eoff,**eofv;
-
 float** buav,**fw,**gw,**hw, *xbuf,*ybuf,*zbuf;
 int nv1,i,j,i1,i2,i3,nz1,nz = iprz;
-
 float f1,f2,f3,g1,g2,g3,h1,h2,h3,v1,v2,v3;
-
 float** bu,**bub, **xclc,**xcld,**buc,**bud,*bulc,*buld,**xub[4],**tbc[4],*sbc,**sc,****tc,*vc,*vx,*vy,*vz;
-
-
 float **plasma_prim[9], **plasma_prim2[9],**plasma_vector[7],**plasma_vect_out[7],**plasma_vect_out2[7];
+
 const char file1_name[] = "pentd1";
 const char file2_name[] = "pentd2";
 const char file3_name[] = "pentd3";
@@ -68,19 +64,12 @@ char var4_sub1[] = "B_x";
 char var4_sub2[] = "B_y";
 char var4_sub3[] = "B_z";
 
-
 int WriteSiloScalar(DBfile *plamsafile, float **var1, const char *var_name,   char *var_sub1);
 int WriteSiloVector(DBfile *plasmafile, float **var1, float **var2, float **var3, const char *var_name, char *var_sub1, char *var_sub2, char *var_sub3);
-
 void vecop0(int imode);
-
 void vform2(int imode ,float** buav ,float** fw ,float** gw ,float** hw) ;
-
 void venocvb1(int imode,int nz1,float** xclc,float** xcld,float* sbc,float** tbc[4],float**buc,float**bud,float* vx,float* vy,float* vz) ;
-
 void venocv1(int imode,int nz1,float**xclc,float**sc,float**** tc,float**buc,float*vx,float*vy,float*vz);
-
-
 
 float **Create2DFloat(int n, int m)
 {
@@ -93,18 +82,14 @@ float **Create2DFloat(int n, int m)
    return array;
 };
 
-
 void Delete2DFloat(float **array)
 {
    delete[] array[0];
    delete[] array;
 };
 
-
 float ****Create4DFloat(int d1, int d2, int d3, int d4)
 {
-
-
    float ****arr;
 
    int i1,i2,i3;
@@ -142,11 +127,9 @@ float ****Create4DFloat(int d1, int d2, int d3, int d4)
 	}
    }		
 	
-
 // float ****arr = new float [d1 + 1][d2 + 1][d3 + 1][d4 + 1];
    return arr;
 }
-
 
 void Delete4DFloat(float ****arr)
 {
@@ -155,8 +138,6 @@ void Delete4DFloat(float ****arr)
    delete[] arr[0];
    delete[] arr;
 }
-
-
 
 int **Create2DInt(int n, int m)
 {
@@ -169,14 +150,11 @@ int **Create2DInt(int n, int m)
    return array;
 };
 
-
 void Delete2DInt(int **array)
 {
    delete[] array[0];
    delete[] array;
 };
-
-
 
 int Pow2(int exponent)
 {
@@ -186,7 +164,6 @@ int Pow2(int exponent)
    return power;
 };
 
-
 bool Match3(int i1, int i2, int i3, int j1, int j2, int j3)
 {
    if((i1 != j1) && (i1 != j2) && (i1 != j3)) return false;
@@ -195,15 +172,8 @@ bool Match3(int i1, int i2, int i3, int j1, int j2, int j3)
    return true;
 };
 
-
-
 int main(void)
-
 {
-
-
-
-
    bool found;
    int var, nvertx_max, nfacex_max, vert, vert1,vert2, vert3,vert4, face, nfacex_cur, nedgex, iv, ic, ivmax, l;
    nvertx_max = 30 * Pow2(2 * (gridlevel_max - 1)) + 2; // 30 * 2^(2*4) +2  =  7682  =  iprm5  = iprv (no of vertices)
@@ -221,7 +191,6 @@ int main(void)
    parmfile.read((char *)&nvertx, sizeof(int));	       // nv
    parmfile.read((char *)&nfacex, sizeof(int));        // nu 
    parmfile.read((char *)&lmax, sizeof(int)); lmax++;  // nz
-
 
 //------------------------------------------------------------------------------
    vlat = new float[nvertx + 1];
@@ -267,37 +236,29 @@ int main(void)
    };
    vertfile.close();
 
-
 //------------------------------------------------------------------------------
    xv = Create2DFloat(lmax, nvertx);
    yv = Create2DFloat(lmax, nvertx);
    zv = Create2DFloat(lmax, nvertx);
-
    zzv = Create2DFloat(lmax, nvertx);
-
    v0 = Create2DFloat(lmax, nvertx);
 
-  for(var = 1; var <= 6; var++) 
+   for(var = 1; var <= 6; var++) 
    {
 	s[var] = Create2DFloat(lmax, nvertx);  
 
-  }
-
+   }
 
    sb = Create2DFloat(lmax, nvertx);
 
- for(var = 1; var <= 6; var++) 
+   for(var = 1; var <= 6; var++) 
    {
 	t[var] = Create4DFloat(lmax, 3, 3, nvertx);  
-
-
-  }
+   }
 
    tb = Create4DFloat(lmax, 3, 3, nvertx);  
 
    ifstream coorfile;
-
-
    coorfile.open(file3_name, ifstream::in | ifstream::binary);
 
    for(l = 1; l <= lmax; l++) {
@@ -309,39 +270,28 @@ int main(void)
       coorfile.seekg((nvertx_max - nvertx) * sizeof(float), ifstream::cur);
       coorfile.read((char *)&zv[l][1], nvertx * sizeof(float));   //xcl1(3) -z
       coorfile.seekg((nvertx_max - nvertx) * sizeof(float), ifstream::cur);
-
-     coorfile.read((char *)&zzv[l][1], nvertx * sizeof(float));   //xcl1(4) -???
+      coorfile.read((char *)&zzv[l][1], nvertx * sizeof(float));   //xcl1(4) -???
       coorfile.seekg((nvertx_max - nvertx) * sizeof(float), ifstream::cur);
-
       coorfile.read((char *)&v0[l][1], nvertx * sizeof(float));   // volume 
       coorfile.seekg((nvertx_max - nvertx) * sizeof(float), ifstream::cur);
-
 
       for(var = 1; var <= 6; var++) {   // side areas
    	coorfile.read((char *)&s[var][l][1], nvertx * sizeof(float));   
       	coorfile.seekg((nvertx_max - nvertx) * sizeof(float), ifstream::cur);
-      
       }
-
-
 
       coorfile.read((char *)&sb[l][1], nvertx * sizeof(float));   // bottom area
       coorfile.seekg((nvertx_max - nvertx) * sizeof(float), ifstream::cur);
 
-
-	// side normal/tangential vectors
-    for(var = 1; var <= 6; var++) {
+      // side normal/tangential vectors
+      for(var = 1; var <= 6; var++) {
    			
      	for(ic=1 ; ic<=3 ; ic++)  {
 
    	  	for(iv=1 ; iv<=3 ; iv++)  {
-
 			      coorfile.read((char *)&t[var][l][ic][iv][1], nvertx * sizeof(float));   
 			      coorfile.seekg((nvertx_max - nvertx) * sizeof(float), ifstream::cur);
-
 		}	
-
-
 	 }
     }
 
@@ -349,21 +299,15 @@ int main(void)
 	for(ic=1 ; ic<=3 ; ic++)
 	{
 		for(iv=1 ; iv<=3 ; iv++)
-		{
-	     	
+		{   	
 		      coorfile.read((char *)&tb[l][ic][iv][1], nvertx * sizeof(float));   
 		      coorfile.seekg((nvertx_max - nvertx) * sizeof(float), ifstream::cur);	
 		}
 	}
-
       coorfile.seekg(4, ifstream::cur);
 
    };
    coorfile.close();
-
-
-
-
 
 
 //------------------------------------------------------------------------------
@@ -431,9 +375,7 @@ lmax = lmax-1;
       }
    }
 
-
-vecop0(1);  // calculation
-
+   vecop0(1);  // calculation
 
    for(l = 1; l <= lmax; l++) {
       for(vert = 1; vert <= (nvertx); vert++) {
@@ -445,35 +387,22 @@ vecop0(1);  // calculation
       }
    }
 
-
-
-//**********
-
-
-
-
 //**********
 //calculate Curl B/B^2
 
    for(l = 1; l <= lmax; l++) {
       for(vert = 1; vert <= (nvertx); vert++) {
-
   		plasma_vector[1][l][vert] = plasma_prim[5][l][vert] ;
   		plasma_vector[2][l][vert] = plasma_prim[6][l][vert] ;
   		plasma_vector[3][l][vert] = plasma_prim[7][l][vert] ;
-
       }
    }
-
-
-
-vecop0(2); // calculation of curl
+   vecop0(2); // calculation of curl
 
 
    for(l = 1; l <= lmax; l++) {
       for(vert = 1; vert <= (nvertx); vert++) {
-
-  		plasma_vect_out[4][l][vert] = plasma_vector[4][l][vert] /  
+ 		plasma_vect_out[4][l][vert] = plasma_vector[4][l][vert] /  
 (plasma_prim[5][l][vert]*plasma_prim[5][l][vert] + plasma_prim[6][l][vert]*plasma_prim[6][l][vert] + plasma_prim[7][l][vert]*plasma_prim[7][l][vert])  ;
 
   		plasma_vect_out[5][l][vert] = plasma_vector[5][l][vert] /  
@@ -486,49 +415,34 @@ vecop0(2); // calculation of curl
    }
 
 //**********
-
-
-
-
    float x1,x2,x3,y1,y2,y3,z1,z2,z3,a1,b1,c1,c,d1,e1,coc1,x4,y4,z4,x5,y5,z5,x6,y6,z6,x12,y12,z12,x13,y13,z13,r5;
-
    cocx = Create2DFloat(lmax, nvertx*2);
    cocy = Create2DFloat(lmax, nvertx*2);
    cocz = Create2DFloat(lmax, nvertx*2);
-
    voff_new = Create2DInt(6, nvertx); // vertices of hex/pent faces
-
-
-
 //lmax = 10 ;
 
-
-
 // Finding centers of triangles
-
 
 int ind2 , ind3, i,count,temp ,j;
 
 	for(l = 1; l <= lmax-1; l++) {
 
-ind2 = 0,ind3 =1, i,count=0,temp=0 ,j=1;
+		ind2 = 0,ind3 =1, i,count=0,temp=0 ,j=1;
 
 		for(vert = 1; vert <= nvertx; vert++) {
 
-
-		//points of a triangle   // points between top and bottom layers
+			//points of a triangle   // points between top and bottom layers
 			x1 = (xv[l][vert] + xv[l+1][vert])*0.5;
 			y1 = (yv[l][vert] + yv[l+1][vert])*0.5;
 			z1 = (zv[l][vert] + zv[l+1][vert])*0.5;
-		
 			
-		
-				count = 0.0;
+			count = 0.0;
 
 			 
-		 // find points around the mid point
+			 // find points around the mid point
 
-				ivmax = (vofv[6][vert] == 0 ? 5 : 6); 
+			ivmax = (vofv[6][vert] == 0 ? 5 : 6); 
 
     
 
@@ -594,55 +508,34 @@ ind2 = 0,ind3 =1, i,count=0,temp=0 ,j=1;
 		      cocy[l][ind2] = 50.0 * (y6 + coc1* y5/r5);
 		      cocz[l][ind2] = 50.0 * (z6 + coc1* z5/r5);
 
-
-			for(i = 1; i < ind2; i++){
-				
-
+			for(i = 1; i < ind2; i++){	
 				if( (fabs(cocz[l][ind2] - cocz[l][i]) <=0.01) && (fabs(cocy[l][ind2] - cocy[l][i]) <=0.01)  && (fabs(cocx[l][ind2] -cocx[l][i]) <=0.01) ) { 
-
 					voff_new[iv][ind3] = i; 
 					count++;
 					temp = -1;
 					break;
-				}
-		
-				
-
+				}  		
 			}
 
-
 			ind2 = ind2 + temp;  // stop increment if its the same vertex
+			
+			temp = 0;	
 
-				
-			temp = 0;
-		
-
-			j++;
-	
+			j++;	
 		} //iv
-
 		 ind3++;
-
-
 		}
 
 	}
-cout<<"Total Hex/Pent faces: "<<nvertx<<"	Total vertices: "<<ind2<<endl;
-
-
-
+	cout<<"Total Hex/Pent faces: "<<nvertx<<"	Total vertices: "<<ind2<<endl;
 
 	nfacex = nvertx;  // New number of faces - center of face is nvertx
-
 	nvertx = ind2;  // new no. of vertices (vertices of each pent/hex)
-
 	nedgex = 3 * nvertx / 2;  // no of edges
 
+	voff_new2 = Create2DInt(6, nfacex); // vertices of hex/pent faces
 
-
-voff_new2 = Create2DInt(6, nfacex); // vertices of hex/pent faces
-
-int k = 12;
+	int k = 12;
 
 
 // put the 12 pent faces at the beginning of voff_new2 array
@@ -652,17 +545,13 @@ int k = 12;
 
 	if(voff_new[6][vert] != 0)
 	{
-
-
 			k++;
 		for(iv=1;iv<=6; iv++)
 		{
 			voff_new2[iv][k] = voff_new[iv][vert];
 		}
 	}
-
 }
-
 
 k=0;
 // get the pentagons to 1st 12 elements of voff
@@ -678,72 +567,41 @@ k=0;
 			voff_new2[iv][k] = voff_new[iv][vert];
 		}
 	}
-
 }
 
-
-
 // put the 12 pent faces data values at the beginning of data arrays
-
-
 
  for(l = 1; l <= lmax; l++) {
 	k=12;
       for(vert = 1; vert <= nfacex; vert++) {
 	if(voff_new[6][vert] != 0)
 	  {
-
 			k++;
-
-
-		
-
      	 	for(var = 1; var <= 8; var++) {
-
-         		plasma_prim2[var][l][k] = plasma_prim[var][l][vert];
-
-  
+         		plasma_prim2[var][l][k] = plasma_prim[var][l][vert]; 
 	        }
 
      	 	for(var = 1; var <= 6; var++) {
-
-			plasma_vect_out2[var][l][k] = plasma_vect_out[var][l][vert];	
-	
-  
+			plasma_vect_out2[var][l][k] = plasma_vect_out[var][l][vert];	 
 	       }
 	  }
 
 	};
 
    };
-
-
-
 
  for(l = 1; l <= lmax; l++) {
 	k=0;
       for(vert = 1; vert <= nfacex; vert++) {
 	if(voff_new[6][vert] == 0)
 	  {
-
 			k++;
-
-
      	 	for(var = 1; var <= 8; var++) {
-
-         		plasma_prim2[var][l][k] = plasma_prim[var][l][vert];
-         
+         		plasma_prim2[var][l][k] = plasma_prim[var][l][vert];         
 	      }
-
-
      	 	for(var = 1; var <= 6; var++) {
-
 			plasma_vect_out2[var][l][k] = plasma_vect_out[var][l][vert];	
-	
-  
 	       }
-
-
 	  }
 
 	};
@@ -751,15 +609,8 @@ k=0;
    };
 
 
-
 int edge, edge1, edge2, face1, face2,face3, face4, iv1, iv2, tempi1;
-
-
-
-
 ////////////////////////////////
-
-
 
 // connectivity arrays
 
@@ -770,9 +621,7 @@ int edge, edge1, edge2, face1, face2,face3, face4, iv1, iv2, tempi1;
    fofv = Create2DInt(3, nvertx);
    eofv = Create2DInt(3, nvertx);
 
-
 // calculate fofv
-
 
    memset(fofv[0], 0, (nfacex) * sizeof(int));
 
@@ -784,9 +633,6 @@ int edge, edge1, edge2, face1, face2,face3, face4, iv1, iv2, tempi1;
          else fofv[3][vert] = face;
       };
    };
-
-
-
 
 // calculate fnxtf_new, fnxte, vofe
    edge = 1;
@@ -826,8 +672,6 @@ int edge, edge1, edge2, face1, face2,face3, face4, iv1, iv2, tempi1;
       };
    };
 
-
-
 // calculate eoff
    for(edge = 1; edge <= nedgex; edge++) {
       face1 = fnxte[1][edge];
@@ -863,7 +707,6 @@ int edge, edge1, edge2, face1, face2,face3, face4, iv1, iv2, tempi1;
    DBfacelist *fl;
    plasmafile = DBCreate(plasma_silo, DB_CLOBBER, DB_LOCAL, NULL, DB_PDB);
 
-
 // vertices
    nnodes = (nvertx) * (lmax - 3);  
    coords[0] = new float[nnodes]; // x
@@ -872,19 +715,12 @@ int edge, edge1, edge2, face1, face2,face3, face4, iv1, iv2, tempi1;
    ind = 0;
    for(l = 3; l <= lmax-1; l++) {
       for(vert = 1; vert <= (nvertx); vert++) {
-
-  
          coords[0][ind] =  (cocx[l][vert]);
          coords[1][ind] =  (cocy[l][vert]);
          coords[2][ind] =  (cocz[l][vert]);
          ind++;
-
-
       };
-
    };
-
-
 
 // volume cells
    nzones = 2 * nfacex * (lmax - 4);
@@ -999,24 +835,19 @@ int edge, edge1, edge2, face1, face2,face3, face4, iv1, iv2, tempi1;
    err = DBPutUcdmesh(plasmafile, mesh_name, 3, NULL, coords, nnodes, nzones,
      "zl1", "fl1", DB_FLOAT, NULL);
 
-
    DBFreeFacelist(fl);
    delete[] znodelist;
    delete[] coords[0];
    delete[] coords[1];
    delete[] coords[2];
-
 //----------------------------------------------------------------------
 // write data to silo
 
 // Divu
 WriteSiloScalar(plasmafile, plasma_vect_out2[1], var1_name,   var1_sub1);
 
-
 //velocity
-
 WriteSiloVector(plasmafile, plasma_prim2[2], plasma_prim2[3], plasma_prim2[4],  var2_name, var2_sub1, var2_sub2, var2_sub3);
-
 
 //Curl B /B^2
 WriteSiloVector(plasmafile, plasma_vect_out2[4], plasma_vect_out2[5], plasma_vect_out2[6],  var3_name, var3_sub1, var3_sub2, var3_sub3);
@@ -1024,15 +855,12 @@ WriteSiloVector(plasmafile, plasma_vect_out2[4], plasma_vect_out2[5], plasma_vec
 //magnetic field
 WriteSiloVector(plasmafile, plasma_prim2[5], plasma_prim2[6], plasma_prim2[7],  var4_name, var4_sub1, var4_sub2, var4_sub3);
 
-
 //-----------------------------------------------------------------------
-
    DBClose(plasmafile);
    delete[] vlat; delete[] vlong;
    Delete2DInt(vofv); Delete2DInt(voff); Delete2DInt(fnxtf); Delete2DInt(voff_new);
    Delete2DFloat(xv); Delete2DFloat(yv); Delete2DFloat(zv); Delete2DFloat(zzv); 
    Delete2DFloat(cocx); Delete2DFloat(cocy); Delete2DFloat(cocz);Delete2DFloat(v0);Delete2DFloat(sb);Delete4DFloat(tb);
-
 };
 
 // write one scalar variable to a SILO file
@@ -1063,7 +891,6 @@ int WriteSiloScalar(DBfile *plamsafile, float **var1, const char *var_name,   ch
    delete[] vars[0];
    return 0;
 };
-
 
 // write one 3-component vector variable to a SILO file
 int WriteSiloVector(DBfile *plasmafile, float **var1, float **var2, float **var3,
@@ -1115,14 +942,8 @@ int WriteSiloVector(DBfile *plasmafile, float **var1, float **var2, float **var3
    return 0;
 };
 
-
-
-
-
 //--------------------------------------------------------------------------------------------------
-
 // functions for vector operations
-
 //imode = 1 => divergence
 //imode = 2  => curl
 //imode = 3 => gradient
@@ -1147,7 +968,6 @@ void vecop0(int imode)
 	sc = Create2DFloat(6, iprv);
 	sbc = new float[iprv+1];
 	vc = new float[iprv+1];
-
 	vx = new float[iprv+1];
 	vy = new float[iprv+1];
 	vz = new float[iprv+1];
@@ -1158,23 +978,17 @@ void vecop0(int imode)
 	gw = Create2DFloat(3, iprv);
 	hw = Create2DFloat(3, iprv);
 
-
-
 //      load to level 1..................................function.......
 //      buc/side, bu1/bottom
 
 for(nz1 =1;nz1<=iprz ; nz1++) {
-
       for(i1=1 ;i1<=6;i1++) {
-
       		for(i2=1 ;i2<=3;i2++) {
-
 			for(nv1 =1 ; nv1 <= iprv ; nv1++ )
 			{
 				 tc[i1][1][i2][nv1]=t[i1][nz1][1][i2][nv1];
 				 tc[i1][2][i2][nv1]=t[i1][nz1][2][i2][nv1];
 				 tc[i1][3][i2][nv1]=t[i1][nz1][3][i2][nv1];
-
 		   	}
 		}
 
@@ -1182,32 +996,24 @@ for(nz1 =1;nz1<=iprz ; nz1++) {
 		{
         		 sc[i1][nv1]=s[i1][nz1][nv1];
 	   	}
-
-
 	} // i1
 
 //     (1) vc/volume, sbc/bottom surface, tbc/bottom normal
           
-
 	for(nv1 =1 ; nv1 <= iprv ; nv1++ )
 	{
 		 vc[nv1]= v0[nz1][nv1];
 		 sbc[nv1]=sb[nz1][nv1];
    	}
 
-
        for(i2=1 ;i2<=3;i2++) {
-
 	       for(nv1 =1 ; nv1 <= iprv ; nv1++ )
 		{	
-
 			 tbc[1][i2][nv1]= tb[nz1][1][i2][nv1];
 			 tbc[2][i2][nv1]= tb[nz1][2][i2][nv1];
 			 tbc[3][i2][nv1]= tb[nz1][3][i2][nv1];
 	   	}
-
    	}
-
 
 		for(nv1 =1 ; nv1 <= iprv ; nv1++ )
 		{
@@ -1219,11 +1025,9 @@ for(nz1 =1;nz1<=iprz ; nz1++) {
 		  if(nz1!=1) xcld[2][nv1]=yv[nz1-1][nv1];
 		  if(nz1!=1) xcld[3][nv1]=zv[nz1-1][nv1];
 
-
 		  if(nz1==1) xcld[1][nv1]=xv[nz1][nv1] - 0.1;
 		  if(nz1==1) xcld[2][nv1]=yv[nz1][nv1] - 0.1;
 		  if(nz1==1) xcld[3][nv1]=zv[nz1][nv1] - 0.1;
-
 
 		  buc[1][nv1] = plasma_vector[1][nz1][nv1];
 		  buc[2][nv1] = plasma_vector[2][nz1][nv1];
@@ -1238,17 +1042,11 @@ for(nz1 =1;nz1<=iprz ; nz1++) {
 		  if(nz1==1) bud[1][nv1] = plasma_vector[1][nz1][nv1];
 		  if(nz1==1) bud[2][nv1] = plasma_vector[2][nz1][nv1];
 		  if(nz1==1) bud[3][nv1] = plasma_vector[3][nz1][nv1];
-
-
 	   	}
 	
-
 	//     integration.....................................................
 	//     side surface
 	      venocv1(imode,nz1,xclc,sc,tc,buc,vx,vy,vz);
-
-
-
 
 	//     store for nz1
 		for(nv1 =1 ; nv1 <= iprv ; nv1++ )
@@ -1256,9 +1054,7 @@ for(nz1 =1;nz1<=iprz ; nz1++) {
 		      plasma_vector[4][nz1][nv1] = vx[nv1];
 		      plasma_vector[5][nz1][nv1] = vy[nv1];
 		      plasma_vector[6][nz1][nv1] = vz[nv1];
-
 		}
-
 
 	//     bottom surface
 	      venocvb1(imode,nz1,xclc,xcld,sbc,tbc,buc,bud,vx,vy,vz);
@@ -1273,32 +1069,26 @@ for(nz1 =1;nz1<=iprz ; nz1++) {
 	}
 
 	//    z loop end
-	 
 
 	//  outer surface........................................nz+1
-
 		nz = iprz;
 	        nz1= nz+1;
 
 	      for(nv1 =1 ; nv1 <= iprv ; nv1++ )	sbc[nv1]=sb[nz1][nv1];
 
-
 	      for(i2=1;i2<=3;i2++)
 		{
-	
 		       for(nv1 =1 ; nv1 <= iprv ; nv1++ )
 			{
 				 tbc[1][i2][nv1]=tb[nz1][1][i2][nv1];
 				 tbc[2][i2][nv1]=tb[nz1][2][i2][nv1];
 				 tbc[3][i2][nv1]=tb[nz1][3][i2][nv1];
-
 		  	}
 		}
 
 	//     bu1/bottom
 	       for(nv1 =1 ; nv1 <= iprv ; nv1++ )
 		{
-
 		  xclc[1][nv1]=xv[nz][nv1] + 0.1;
 		  xclc[2][nv1]=yv[nz][nv1] + 0.1;
 		  xclc[3][nv1]=zv[nz][nv1] + 0.1;
@@ -1307,7 +1097,6 @@ for(nz1 =1;nz1<=iprz ; nz1++) {
 		  xcld[2][nv1]=yv[nz][nv1];
 		  xcld[3][nv1]=zv[nz][nv1];
 
-
 		  buc[1][nv1] = plasma_vector[1][nz][nv1];
 		  buc[2][nv1] = plasma_vector[2][nz][nv1];
 		  buc[3][nv1] = plasma_vector[3][nz][nv1];
@@ -1315,11 +1104,8 @@ for(nz1 =1;nz1<=iprz ; nz1++) {
 		  bud[1][nv1] = plasma_vector[1][nz][nv1];
 		  bud[2][nv1] = plasma_vector[2][nz][nv1];
 		  bud[3][nv1] = plasma_vector[3][nz][nv1];
-
-
 	      }
 
-	
 	      venocvb1(imode,nz1,xclc,xcld,sbc,tbc,buc,bud,vx,vy,vz);
 
 	//     store for nz1
@@ -1328,7 +1114,6 @@ for(nz1 =1;nz1<=iprz ; nz1++) {
 		      xub[1][nz1][nv1]=vx[nv1];
 		      xub[2][nz1][nv1]=vy[nv1];
 		      xub[3][nz1][nv1]=vz[nv1];
-
 	       }
 
 //	     data transfer for xub
@@ -1341,7 +1126,6 @@ for(nz1 =1;nz1<=iprz ; nz1++) {
 			      plasma_vector[4][nz1][nv1] = plasma_vector[4][nz1][nv1]+xub[1][nz1][nv1]-xub[1][nz1+1][nv1];
 			      plasma_vector[5][nz1][nv1] = plasma_vector[5][nz1][nv1]+xub[2][nz1][nv1]-xub[2][nz1+1][nv1];
 			      plasma_vector[6][nz1][nv1] = plasma_vector[6][nz1][nv1]+xub[3][nz1][nv1]-xub[3][nz1+1][nv1];
-
 		       }
 
 	//	    divide by volume
@@ -1353,15 +1137,10 @@ for(nz1 =1;nz1<=iprz ; nz1++) {
 		        }
 		//    z loop end
 	}
-	
-
 }
-
-
 
 void venocv1(int imode,int nz1,float**xclc,float**sc,float****tc,float**buc,float*vx,float*vy,float*vz)
 {
-
 //    input     buc
 //     output    vx,vy,vz
 //     function in flux formula at each grid......................
@@ -1380,14 +1159,9 @@ void venocv1(int imode,int nz1,float**xclc,float**sc,float****tc,float**buc,floa
 	{
 		for(nv1 =1 ; nv1 <= iprv ; nv1++ )
 		{    
-
-  
 		      j = vofv[i][nv1];
-
 		        if(j != 0) 
 			{
-
-
 		//     function value on surface (f, g, h)
 		//     f((a+b)/2)=(f(a)+f(g))/2
 
@@ -1410,39 +1184,26 @@ void venocv1(int imode,int nz1,float**xclc,float**sc,float****tc,float**buc,floa
 			      ybuf[nv1]=v2*sc[i][nv1];
 			      zbuf[nv1]=v3*sc[i][nv1];
 			}
-			
 		}
-
-
-
 
 	//    sum for present cell i
 	      for(nv1 =1 ; nv1 <= iprv ; nv1++ ) {
-
 		      j=vofv[i][nv1];
 
 ///*******************
 		      if(j != 0) 
 			{
-			
-
 			      vx[nv1]=vx[nv1]+xbuf[nv1];
 			      vy[nv1]=vy[nv1]+ybuf[nv1];
 			      vz[nv1]=vz[nv1]+zbuf[nv1];
 			}
-			
 		}
 	}
 
 }
 
-
-
 void venocvb1(int imode,int nz1,float** xclc,float** xcld,float* sbc,float** tbc[4],float**buc,float**bud,float* vx,float* vy,float* vz) 
 {
-
-
-
 
 //     input     buc
 //     output    vx,vy,vz
@@ -1479,19 +1240,13 @@ void venocvb1(int imode,int nz1,float** xclc,float** xcld,float* sbc,float** tbc
 	      vx[nv1] = v1*sbc[nv1];
 	      vy[nv1] = v2*sbc[nv1];
 	      vz[nv1] = v3*sbc[nv1];
-
 	}
-
 }
-
-
-
 
 void vform2(int imode ,float** buav ,float** fw ,float** gw ,float** hw) 
 {
 //     input       buav
 //     output      fw,gw,hw
-
 
 	if(imode == 1) // Divegence
 	{
@@ -1506,7 +1261,6 @@ void vform2(int imode ,float** buav ,float** fw ,float** gw ,float** hw)
 		      hw[1][nv1] = buav[3][nv1] ;
 		      hw[2][nv1] = buav[3][nv1] ; 
 		      hw[3][nv1] = buav[3][nv1] ;
-	
 		}
 	}
 
@@ -1523,7 +1277,6 @@ void vform2(int imode ,float** buav ,float** fw ,float** gw ,float** hw)
 		      hw[1][nv1] = -buav[2][nv1] ;
 		      hw[2][nv1] = buav[1][nv1] ; 
 		      hw[3][nv1] = 0 ;
-		
 		}
 	}
 
@@ -1540,9 +1293,6 @@ void vform2(int imode ,float** buav ,float** fw ,float** gw ,float** hw)
 		      hw[1][nv1] = 0 ;
 		      hw[2][nv1] = 0 ; 
 		      hw[3][nv1] = buav[3][nv1] ;
-		
 		}
 	}
-
-
 }
